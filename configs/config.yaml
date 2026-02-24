@@ -1,0 +1,35 @@
+# Prompt Eval Framework Configuration
+database:
+  path: "data/prompteval.duckdb"
+
+defaults:
+  temperature: 0.7
+  max_tokens: 1024
+  top_p: 1.0
+  timeout: 60.0
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+paths:
+  prompts_dir: "example_prompts"
+  suites_dir: "example_suites"
+  reports_dir: "reports"
+
+pricing:
+  gpt-4-turbo-preview:
+    input: 10.00
+    output: 30.00
+  gpt-4:
+    input: 30.00
+    output: 60.00
+  gpt-3.5-turbo:
+    input: 0.50
+    output: 1.50
+  claude-sonnet-4-20250514:
+    input: 3.00
+    output: 15.00
+  claude-haiku-4-20250514:
+    input: 0.25
+    output: 1.25
