@@ -1,0 +1,25 @@
+services:
+  prompteval:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./example_prompts:/app/prompts
+      - ./example_suites:/app/suites
+      - ./reports:/app/reports
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    command: ["bash"]
+    stdin_open: true
+    tty: true

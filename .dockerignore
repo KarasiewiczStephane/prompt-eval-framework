@@ -1,0 +1,16 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.coverage
+htmlcov
+.env
+*.egg-info
+dist
+build
+.venv
+venv
+data/*.duckdb
+reports/*.html

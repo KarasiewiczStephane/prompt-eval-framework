@@ -2,6 +2,7 @@ FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -9,13 +10,4 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src/ src/
-COPY configs/ configs/
-
-RUN mkdir -p /app/data /app/prompts /app/suites /app/reports
-
 ENV PYTHONPATH=/app
-ENV DB_PATH=/app/data/prompteval.duckdb
-
-ENTRYPOINT ["python", "-m", "src.cli"]
-CMD ["--help"]
