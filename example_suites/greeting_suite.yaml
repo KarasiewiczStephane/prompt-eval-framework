@@ -1,0 +1,27 @@
+name: greeting_test_suite
+prompt: greeting
+description: Test cases for customer greeting prompt
+tags:
+  - customer-service
+  - greeting
+test_cases:
+  - id: tc_basic
+    name: Basic greeting
+    input:
+      customer_name: John
+      topic: returns
+    expected: "Hello John"
+    assertion: contains
+    tags:
+      - basic
+
+  - id: tc_formal
+    name: Professional tone check
+    input:
+      customer_name: Dr. Smith
+      topic: billing
+    expected: "(Hello|Greetings|Good).*Dr\\.?\\s*Smith"
+    assertion: regex
+    tags:
+      - tone
+      - formal
