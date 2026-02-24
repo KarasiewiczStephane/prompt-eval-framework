@@ -1,0 +1,15 @@
+name: summarization
+category: text-processing
+system_prompt: You are a concise summarizer. Extract the key points from the given text.
+user_prompt: |
+  Summarize the following text in {{ max_sentences }} sentences or fewer:
+
+  {{ text }}
+variables:
+  - text
+  - max_sentences
+model_config:
+  temperature: 0.3
+  max_tokens: 512
+metadata:
+  tags: [summarization, text-processing]

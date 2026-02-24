@@ -1,0 +1,14 @@
+name: classification
+category: analysis
+system_prompt: |
+  You are a sentiment analysis classifier. Classify the given text into one of:
+  positive, negative, or neutral. Respond with only the label.
+user_prompt: |
+  Classify the sentiment of: {{ text }}
+variables:
+  - text
+model_config:
+  temperature: 0.0
+  max_tokens: 10
+metadata:
+  tags: [classification, sentiment]

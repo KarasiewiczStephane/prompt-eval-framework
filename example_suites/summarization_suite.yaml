@@ -1,0 +1,52 @@
+name: summarization_test_suite
+prompt: summarization
+description: Test cases for text summarization prompt
+tags: [summarization, text-processing]
+test_cases:
+  - id: tc_short_text
+    name: Short article summary
+    input:
+      text: "The stock market rose 2% today driven by strong tech earnings. Apple reported record revenue while Microsoft beat analyst expectations."
+      max_sentences: "2"
+    expected: "stock market"
+    assertion: contains
+    tags: [basic]
+
+  - id: tc_single_sentence
+    name: Single sentence summary
+    input:
+      text: "Researchers at MIT have developed a new solar cell that is twice as efficient as current models, potentially reducing the cost of solar energy by half."
+      max_sentences: "1"
+    expected: "solar"
+    assertion: contains
+    tags: [basic]
+
+  - id: tc_preserves_key_info
+    name: Preserves key information
+    input:
+      text: "NASA announced today that the Artemis III mission will land astronauts on the Moon in 2026. This will be the first crewed lunar landing since Apollo 17 in 1972."
+      max_sentences: "2"
+    expected: "(Artemis|Moon|lunar)"
+    assertion: regex
+    tags: [accuracy]
+
+  - id: tc_multi_paragraph
+    name: Multi-paragraph text
+    input:
+      text: "Climate change continues to affect global weather patterns. Temperatures have risen by 1.1 degrees Celsius since pre-industrial times. Scientists warn that without action, we could see 2 degrees of warming by 2050."
+      max_sentences: "2"
+    expected: "climate"
+    assertion: contains
+    assertion_params:
+      case_sensitive: false
+    tags: [advanced]
+
+  - id: tc_technical_text
+    name: Technical text summary
+    input:
+      text: "Transformer models use self-attention mechanisms to process sequential data. Unlike RNNs, they can process all tokens in parallel, leading to faster training. The key innovation is the multi-head attention layer."
+      max_sentences: "2"
+    expected: "(transformer|attention)"
+    assertion: regex
+    assertion_params: {}
+    tags: [technical]

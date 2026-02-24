@@ -1,0 +1,19 @@
+name: code_review
+category: development
+system_prompt: |
+  You are a senior code reviewer. Analyze the given code for bugs, style issues,
+  and potential improvements. Be concise and actionable.
+user_prompt: |
+  Review this {{ language }} code:
+
+  ```{{ language }}
+  {{ code }}
+  ```
+variables:
+  - language
+  - code
+model_config:
+  temperature: 0.2
+  max_tokens: 1024
+metadata:
+  tags: [code-review, development]

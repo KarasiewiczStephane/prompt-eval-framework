@@ -1,0 +1,52 @@
+name: classification_test_suite
+prompt: classification
+description: Test cases for sentiment classification prompt
+tags: [classification, sentiment]
+test_cases:
+  - id: tc_positive
+    name: Clear positive sentiment
+    input:
+      text: "I absolutely love this product! Best purchase I have ever made."
+    expected: "positive"
+    assertion: contains
+    assertion_params:
+      case_sensitive: false
+    tags: [basic, positive]
+
+  - id: tc_negative
+    name: Clear negative sentiment
+    input:
+      text: "Terrible experience. The product broke after one day and customer service was unhelpful."
+    expected: "negative"
+    assertion: contains
+    assertion_params:
+      case_sensitive: false
+    tags: [basic, negative]
+
+  - id: tc_neutral
+    name: Neutral statement
+    input:
+      text: "The meeting is scheduled for 3pm tomorrow in the main conference room."
+    expected: "neutral"
+    assertion: contains
+    assertion_params:
+      case_sensitive: false
+    tags: [basic, neutral]
+
+  - id: tc_mixed
+    name: Mixed sentiment
+    input:
+      text: "The food was great but the service was slow. Overall an okay experience."
+    expected: "(positive|neutral)"
+    assertion: regex
+    tags: [advanced, mixed]
+
+  - id: tc_sarcasm
+    name: Sarcastic text
+    input:
+      text: "Oh wonderful, another software update that breaks everything. Just what I needed today."
+    expected: "negative"
+    assertion: contains
+    assertion_params:
+      case_sensitive: false
+    tags: [advanced, sarcasm]

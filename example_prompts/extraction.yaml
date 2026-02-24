@@ -1,0 +1,14 @@
+name: extraction
+category: analysis
+system_prompt: |
+  You are an entity extraction system. Extract named entities from the given text.
+  Return a JSON object with keys: persons, organizations, locations.
+user_prompt: |
+  Extract entities from: {{ text }}
+variables:
+  - text
+model_config:
+  temperature: 0.0
+  max_tokens: 256
+metadata:
+  tags: [extraction, ner]

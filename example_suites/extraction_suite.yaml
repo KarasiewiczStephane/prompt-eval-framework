@@ -1,0 +1,44 @@
+name: extraction_test_suite
+prompt: extraction
+description: Test cases for named entity extraction prompt
+tags: [extraction, ner]
+test_cases:
+  - id: tc_person
+    name: Extract person name
+    input:
+      text: "Elon Musk announced new plans for SpaceX at a press conference in Houston."
+    expected: "Elon Musk"
+    assertion: contains
+    tags: [basic, person]
+
+  - id: tc_organization
+    name: Extract organization
+    input:
+      text: "Google released a new version of Chrome with improved security features."
+    expected: "Google"
+    assertion: contains
+    tags: [basic, organization]
+
+  - id: tc_location
+    name: Extract location
+    input:
+      text: "The conference will be held in San Francisco next week."
+    expected: "San Francisco"
+    assertion: contains
+    tags: [basic, location]
+
+  - id: tc_multiple_entities
+    name: Multiple entities
+    input:
+      text: "Tim Cook, CEO of Apple, met with EU officials in Brussels to discuss antitrust regulations."
+    expected: "(Tim Cook|Apple|Brussels)"
+    assertion: regex
+    tags: [advanced, multiple]
+
+  - id: tc_json_output
+    name: JSON format output
+    input:
+      text: "Dr. Sarah Johnson from Stanford University published her research in Nature."
+    expected: "persons"
+    assertion: contains
+    tags: [format, json]
