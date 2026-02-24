@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompt Evaluation Report — {{ run.suite_name }}</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root { --primary: #2563eb; --success: #16a34a; --danger: #dc2626; }
+        body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #f8fafc; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: var(--primary); }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 2rem; font-weight: bold; color: var(--primary); }
+        .metric-label { color: #64748b; font-size: 0.875rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; font-weight: 600; }
+        .passed { color: var(--success); }
+        .failed { color: var(--danger); }
+        .chart-container { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .failed-tests { margin-top: 30px; }
+        .test-case { background: white; padding: 16px; border-radius: 8px; margin: 10px 0; border-left: 4px solid var(--danger); }
+        .test-case h4 { margin: 0 0 10px 0; }
+        pre { background: #f1f5f9; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prompt Evaluation Report</h1>
+        <p>Suite: <strong>{{ run.suite_name }}</strong> | Model: <strong>{{ run.model }}</strong> | Date: {{ run.completed_at }}</p>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(metrics.accuracy.accuracy * 100) }}%</div>
+                <div class="metric-label">Accuracy ({{ metrics.accuracy.passed }}/{{ metrics.accuracy.total }})</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.0f"|format(metrics.latency.p50) }}ms</div>
+                <div class="metric-label">Latency (p50)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "{:,}".format(metrics.tokens.total) }}</div>
+                <div class="metric-label">Total Tokens</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">${{ "%.4f"|format(metrics.cost.total_cost_usd) }}</div>
+                <div class="metric-label">Total Cost</div>
+            </div>
+        </div>
+
+        {% if metrics.accuracy.by_tag %}
+        <div class="chart-container">
+            <h3>Accuracy by Tag</h3>
+            <div id="accuracy-by-tag"></div>
+        </div>
+        {% endif %}
+
+        <div class="chart-container">
+            <h3>Latency Distribution</h3>
+            <div id="latency-chart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h3>Cost Breakdown</h3>
+            <div id="cost-chart"></div>
+        </div>
+
+        {% if model_comparison %}
+        <div class="chart-container">
+            <h3>Model Comparison</h3>
+            <table>
+                <thead>
+                    <tr><th>Model</th><th>Accuracy</th><th>Latency (p50)</th><th>Cost</th></tr>
+                </thead>
+                <tbody>
+                    {% for model_name, m in model_metrics.items() %}
+                    <tr>
+                        <td>{{ model_name }}</td>
+                        <td>{{ "%.1f"|format(m.accuracy.accuracy * 100) }}%</td>
+                        <td>{{ "%.0f"|format(m.latency.p50) }}ms</td>
+                        <td>${{ "%.4f"|format(m.cost.total_cost_usd) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if failed_tests %}
+        <div class="failed-tests">
+            <h3>Failed Tests ({{ failed_tests|length }})</h3>
+            {% for ft in failed_tests %}
+            <div class="test-case">
+                <h4>{{ ft.name }} ({{ ft.id }})</h4>
+                <p><strong>Expected:</strong></p>
+                <pre>{{ ft.expected }}</pre>
+                <p><strong>Actual:</strong></p>
+                <pre>{{ ft.actual }}</pre>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Latency histogram
+        var latencyData = {{ latency_data | safe }};
+        if (latencyData.length > 0) {
+            Plotly.newPlot('latency-chart', [{
+                x: latencyData,
+                type: 'histogram',
+                marker: { color: '#2563eb' },
+                nbinsx: 20
+            }], {
+                xaxis: { title: 'Latency (ms)' },
+                yaxis: { title: 'Count' },
+                margin: { t: 10 }
+            });
+        }
+
+        // Cost pie chart
+        var costData = {{ cost_data | safe }};
+        if (costData.labels.length > 0) {
+            Plotly.newPlot('cost-chart', [{
+                labels: costData.labels,
+                values: costData.values,
+                type: 'pie',
+                marker: { colors: ['#2563eb', '#16a34a'] }
+            }], { margin: { t: 10 } });
+        }
+
+        // Accuracy by tag bar chart
+        {% if metrics.accuracy.by_tag %}
+        var tagData = {{ tag_data | safe }};
+        Plotly.newPlot('accuracy-by-tag', [{
+            x: tagData.tags,
+            y: tagData.accuracies,
+            type: 'bar',
+            marker: { color: '#2563eb' }
+        }], {
+            yaxis: { title: 'Accuracy', range: [0, 1] },
+            margin: { t: 10 }
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
