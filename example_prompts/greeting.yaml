@@ -1,0 +1,20 @@
+name: greeting
+category: customer-service
+system_prompt: You are a helpful customer service agent.
+user_prompt: |
+  Greet the customer named {{ customer_name }} who is inquiring about {{ topic }}.
+  Be friendly and professional.
+variables:
+  - customer_name
+  - topic
+model_config:
+  temperature: 0.7
+  max_tokens: 256
+few_shot_examples:
+  - user: "Greet John asking about returns"
+    assistant: "Hello John! Thank you for reaching out..."
+metadata:
+  author: team
+  tags:
+    - greeting
+    - support
