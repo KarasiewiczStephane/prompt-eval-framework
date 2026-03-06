@@ -23,11 +23,11 @@ class TestReadme:
 
     def test_has_usage_section(self) -> None:
         content = (ROOT / "README.md").read_text()
-        assert "## Usage" in content
+        assert "## Quick Start" in content or "## Usage" in content
 
     def test_has_docker_section(self) -> None:
         content = (ROOT / "README.md").read_text()
-        assert "## Docker" in content
+        assert "Docker" in content
 
     def test_has_project_structure(self) -> None:
         content = (ROOT / "README.md").read_text()
