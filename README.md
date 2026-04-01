@@ -1,6 +1,6 @@
 # Prompt Engineering Evaluation Framework
 
-A testing suite for LLM prompts with metrics tracking, A/B testing, cost optimization, and reporting.
+> Systematic LLM prompt evaluation — multi-model testing, A/B comparisons, cost optimization, and interactive reporting across GPT-4, Claude, and more.
 
 ## Features
 
@@ -208,6 +208,11 @@ make clean        # Remove cache files
 make run ARGS="--help"   # Run CLI with arguments
 make dashboard    # Launch Streamlit dashboard
 ```
+
+
+## Author
+
+**Stéphane Karasiewicz** — [skarazdata.com](https://skarazdata.com) | [LinkedIn](https://www.linkedin.com/in/stephane-karasiewicz/)
 
 ## License
 
